@@ -10,7 +10,7 @@
         body {
             position: relative;
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            padding: 20px;
+            padding: 12px;
         }
 
         body::before {
@@ -27,26 +27,26 @@
         }
 
         .logo-placeholder {
-            width: 200px;
-            height: 80px;
+            width: min(200px, 50%);
+            height: auto;
             margin: 20px auto;
             display: block;
         }
 
         h1 {
             text-align: center;
-            font-size: 2.2rem;
+            font-size: clamp(1.5rem, 5vw, 2.2rem);
             color: #005a87;
             margin: 20px 0;
             text-transform: uppercase;
         }
-		
-		.header {
-			padding-bottom: 30px;
-		}
+        
+        .header {
+            padding-bottom: 20px;
+        }
 
         .card {
-            width: 90%;
+            width: 100%;
             max-width: 1400px;
             height: auto;
             margin: 20px auto;
@@ -54,24 +54,44 @@
             border-radius: 8px;
             box-shadow: 0 2px 10px rgba(0,0,0,0.1);
             overflow: hidden;
-            padding: 24px;
+            padding: 16px;
         }
 
         .container {
             display: grid;
-            grid-template-columns: 58% 40%;
+            grid-template-columns: 1fr;
             gap: 24px;
+        }
+
+        @media (min-width: 1024px) {
+            .container {
+                grid-template-columns: 58% 40%;
+            }
+            
+            body {
+                padding: 20px;
+            }
+            
+            .card {
+                padding: 24px;
+            }
         }
 
         .modules-grid {
             display: grid;
-            grid-template-columns: repeat(3, 1fr);
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
             gap: 12px;
             height: auto;
         }
 
+        @media (min-width: 768px) {
+            .modules-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
         .module-card {
-            padding: 8px;
+            padding: 12px;
             border: 2px solid #E5E7EB;
             border-radius: 8px;
             cursor: pointer;
@@ -112,26 +132,32 @@
         }
 
         .config-section {
-			border-left: 1px solid #E5E7EB;
-			padding-left: 16px;
-			position: relative;
-			padding-bottom: 80px; /* Make space for footer */
-		}
-		
-		.config-footer {
-			position: absolute;
-			bottom: 0;
-			right: 0;
-			padding: 16px;
-		}
+            border-left: none;
+            padding-left: 0;
+            position: relative;
+            padding-bottom: 80px;
+        }
 
-		.footer-logo {
-			display: block;
-			width: 120px;
-			height: 60px;
-			object-fit: contain;
-		}
+        @media (min-width: 1024px) {
+            .config-section {
+                border-left: 1px solid #E5E7EB;
+                padding-left: 16px;
+            }
+        }
 
+        .config-footer {
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            padding: 16px;
+        }
+
+        .footer-logo {
+            display: block;
+            width: 120px;
+            height: 60px;
+            object-fit: contain;
+        }
 
         .slider-container {
             margin-bottom: 24px;
@@ -166,16 +192,29 @@
         }
 
         .price-grid {
-			display: grid;
-			grid-template-columns: repeat(3, 1fr);
-			gap: 16px;
-			margin-bottom: 16px;
-			text-align: center;
-		}
-		
-		#setupFeeSection {
-			display: block; /* Changed from 'none' to ensure it's always visible */
-		}
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+            margin-bottom: 16px;
+            text-align: center;
+        }
+
+        @media (max-width: 480px) {
+            .price-grid {
+                grid-template-columns: 1fr;
+                gap: 8px;
+            }
+            
+            .price-item {
+                border: none !important;
+                padding: 8px 0;
+                border-bottom: 1px solid #2563EB !important;
+            }
+            
+            .price-item:last-child {
+                border-bottom: none !important;
+            }
+        }
 
         .price-item {
             padding: 8px;
@@ -196,7 +235,7 @@
             width: 100%;
             background-color: white;
             color: #1E40AF;
-            padding: 8px;
+            padding: 12px;
             border: none;
             border-radius: 8px;
             font-weight: 500;
@@ -215,9 +254,15 @@
 
         .module-list {
             display: grid;
-            grid-template-columns: repeat(2, 1fr);
+            grid-template-columns: 1fr;
             gap: 8px;
             margin-top: 8px;
+        }
+
+        @media (min-width: 480px) {
+            .module-list {
+                grid-template-columns: repeat(2, 1fr);
+            }
         }
 
         .module-item {
@@ -225,6 +270,8 @@
             justify-content: space-between;
             font-size: 0.875rem;
             align-items: center;
+            flex-wrap: wrap;
+            gap: 4px;
         }
 
         .switch {
@@ -232,6 +279,7 @@
             display: inline-block;
             width: 44px;
             height: 24px;
+            flex-shrink: 0;
         }
 
         .switch input {
