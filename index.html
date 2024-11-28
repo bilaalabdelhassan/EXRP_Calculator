@@ -4,28 +4,51 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>EXRP Hive Pricing Calculator</title>
+	<link rel="icon" type="image/x-icon" href="favicon.ico">
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body {
-			position: relative;
-			font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            position: relative;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            padding: 20px;
+        }
+
+        body::before {
+            content: "";
+            background-image: url("exrp_bg.jpg");
+            background-size: cover;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0.4;
+            z-index: -1;
+        }
+
+        .logo-placeholder {
+            width: 200px;
+            height: 80px;
+            margin: 20px auto;
+            display: block;
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 2.2rem;
+            color: #005a87;
+            margin: 20px 0;
+            text-transform: uppercase;
+        }
+		
+		.header {
+			padding-bottom: 30px;
 		}
 
-		body::before {
-			content: "";
-			background-image: url("exrp_bg.jpg");
-			background-size: cover;
-			position: fixed;
-			top: 0;
-			left: 0;
-			width: 100%;
-			height: 100%;
-			opacity: 0.4;
-			z-index: -1;
-		}
         .card {
-            width: 1123px;
-            height: 794px;
+            width: 90%;
+            max-width: 1400px;
+            height: auto;
             margin: 20px auto;
             background: linear-gradient(to bottom right, #e7f1ff, #FFFFFF);
             border-radius: 8px;
@@ -38,44 +61,23 @@
             display: grid;
             grid-template-columns: 58% 40%;
             gap: 24px;
-            height: 100%;
-        }
-
-        .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 16px;
-        }
-
-        .title {
-            font-size: 1.25rem;
-            color: #1E40AF;
-            font-weight: bold;
-        }
-
-        .badge {
-            padding: 4px 8px;
-            border: 1px solid #2563EB;
-            border-radius: 4px;
-            color: #2563EB;
-            font-size: 0.875rem;
         }
 
         .modules-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
             gap: 12px;
-            height: 600px;
-            overflow-y: auto;
+            height: auto;
         }
 
         .module-card {
-            padding: 12px;
+            padding: 8px;
             border: 2px solid #E5E7EB;
             border-radius: 8px;
             cursor: pointer;
             transition: all 0.2s;
+            height: auto;
+            min-height: 80px;
         }
 
         .module-card:hover {
@@ -110,9 +112,26 @@
         }
 
         .config-section {
-            border-left: 1px solid #E5E7EB;
-            padding-left: 16px;
-        }
+			border-left: 1px solid #E5E7EB;
+			padding-left: 16px;
+			position: relative;
+			padding-bottom: 80px; /* Make space for footer */
+		}
+		
+		.config-footer {
+			position: absolute;
+			bottom: 0;
+			right: 0;
+			padding: 16px;
+		}
+
+		.footer-logo {
+			display: block;
+			width: 120px;
+			height: 60px;
+			object-fit: contain;
+		}
+
 
         .slider-container {
             margin-bottom: 24px;
@@ -139,7 +158,7 @@
         }
 
         .pricing-summary {
-            background-color: #1E40AF;
+            background-color: #005a87;
             color: white;
             padding: 16px;
             border-radius: 8px;
@@ -147,12 +166,16 @@
         }
 
         .price-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 16px;
-            margin-bottom: 16px;
-            text-align: center;
-        }
+			display: grid;
+			grid-template-columns: repeat(3, 1fr);
+			gap: 16px;
+			margin-bottom: 16px;
+			text-align: center;
+		}
+		
+		#setupFeeSection {
+			display: block; /* Changed from 'none' to ensure it's always visible */
+		}
 
         .price-item {
             padding: 8px;
@@ -185,8 +208,9 @@
             background-color: #F9FAFB;
             padding: 12px;
             border-radius: 8px;
-            height: 180px;
-            overflow-y: auto;
+            height: auto;
+            min-height: 100px;
+            margin-top: 16px;
         }
 
         .module-list {
@@ -250,6 +274,8 @@
     </style>
 </head>
 <body>
+	<img src="EXRP-Logo-Crop.svg" alt="EXRP Logo" class="logo-placeholder">
+    <h1>EXRP Pricing Calculator</h1>
     <div class="card">
         <div class="container">
             <div class="modules-section">
@@ -281,39 +307,45 @@
                 </div>
 
                 <div class="pricing-summary">
-                    <div class="price-grid">
-                        <div class="price-item">
-                            <div class="price-label">Monthly</div>
-                            <div class="price-value" id="monthlyPrice">Rs 0</div>
-                        </div>
-                        <div class="price-item" style="border-left: 1px solid #2563EB; border-right: 1px solid #2563EB;">
-                            <div class="price-label">Annual</div>
-                            <div class="price-value" id="annualPrice">Rs 0</div>
-                            <div style="font-size: 0.75rem; color: #93C5FD;">Save 5%</div>
-                        </div>
-                        <div id="setupFeeSection" class="price-item">
-                            <div class="price-label">Setup Fee</div>
-                            <div class="price-value" id="setupPrice">Rs 0</div>
-                        </div>
-                    </div>
-                    <button class="demo-button">Get Your Free Demo Today</button>
-                    <p style="text-align: center; font-size: 0.75rem; color: #BFDBFE;">
-                        Minimum term: 3 years for all Plans
-                    </p>
-                </div>
+					<div class="price-grid">
+						<div class="price-item">
+							<div class="price-label">Monthly</div>
+							<div class="price-value" id="monthlyPrice">Rs 0</div>
+						</div>
+						<div class="price-item" style="border-left: 1px solid #2563EB; border-right: 1px solid #2563EB;">
+							<div class="price-label">Annual</div>
+							<div class="price-value" id="annualPrice">Rs 0</div>
+							<div style="font-size: 0.75rem; color: #93C5FD;">Save 5%</div>
+						</div>
+						<div class="price-item" id="setupFeeSection">
+							<div class="price-label">Setup Fee</div>
+							<div class="price-value" id="setupPrice">Rs 0</div>
+						</div>
+					</div>
+					<button class="demo-button">Get Your Free Demo Today</button>
+					<div style="display: flex; justify-content: space-between; font-size: 0.75rem; color: #BFDBFE;">
+						<span>* Price Excludes Customization</span>
+						<span>Minimum term: 3 years for all Plans</span>
+					</div>
+				</div>
 
                 <div class="selected-modules">
                     <h3>Selected Modules (<span id="moduleCount">0</span>)</h3>
                     <div class="module-list" id="selectedModulesList"></div>
                 </div>
+				
+				<div class="config-footer">
+					<img src="by-exera.png" alt="Footer Logo" class="footer-logo">
+				</div>
             </div>
         </div>
     </div>
 
     <script>
         const modules = [
+			{ id: 'workerbee', name: 'Worker Bee', price: 5000, description: 'Customer Management' },
             { id: 'hivekeeper', name: 'Hive Keeper', price: 7500, popular: true, description: 'Inventory Management' },
-            { id: 'workerbee', name: 'Worker Bee', price: 5000, description: 'Customer Management' },
+			{ id: 'collectorbee', name: 'Collector Bee', price: 5000, description: 'POS (No Hardware)' },
             { id: 'honeymaker', name: 'Honey Maker', price: 7500, description: 'Basic Invoicing' },
             { id: 'honeymaker2', name: 'Honey Maker Pro', price: 15000, popular: true, description: 'E-Invoicing Ready' },
             { id: 'scoutbee', name: 'Scout Bee', price: 6250, description: 'Campaigns' },
@@ -334,9 +366,9 @@
                      data-id="${module.id}" onclick="toggleModule('${module.id}')">
                     <div class="module-header">
                         <div>
-                            <span class="module-title">${module.name}</span>
+                            <span class="module-title">${module.description}</span>
                             ${module.popular ? '⭐' : ''}
-                            <p class="module-description">${module.description}</p>
+                            <p class="module-description">${module.name}</p>
                             <p class="module-price">Rs ${module.price.toLocaleString()}</p>
                         </div>
                         ${selectedModules.includes(module.id) ? '✓' : ''}
@@ -352,22 +384,6 @@
                 selectedModules.push(id);
             }
             updateUI();
-        }
-
-        function calculatePrice() {
-            const basePrice = 2500 * users;
-            const modulePrice = selectedModules.reduce((sum, moduleId) => {
-                const module = modules.find(m => m.id === moduleId);
-                return sum + (module ? module.price : 0);
-            }, 0);
-            const eInvoicingPrice = eInvoicing ? (1800 * users) : 0;
-            const totalMonthly = (basePrice + modulePrice + eInvoicingPrice) / 12;
-            
-            return {
-                monthly: Math.round(totalMonthly),
-                annual: Math.round(totalMonthly * 12 * 0.95),
-                setup: Math.round(modulePrice * 0.5)
-            };
         }
 
         function updateUI() {
@@ -416,10 +432,20 @@
 			const annual = Math.round(totalMonthly * 12 * 0.95);
 			const setup = Math.round(modulePrice * 0.5);
 			
-			// Hide setup fee if annual is greater
-			const setupElement = document.getElementById('setupFeeSection');
-			if (setupElement) {
-				setupElement.style.display = annual > setup ? 'none' : '';
+			// Update setup fee section content
+			const setupSection = document.getElementById('setupFeeSection');
+			if (setupSection) {
+				if (annual < 50000) {
+					setupSection.innerHTML = `
+						<div class="price-label">Setup Fee</div>
+						<div class="price-value" id="setupPrice">Rs ${setup.toLocaleString()}</div>
+					`;
+				} else {
+					setupSection.innerHTML = `
+						<div class="price-label">Setup Fee</div>
+						<div class="price-value" style="font-size: 0.75rem;">No Setup Fee, Pay Annual Fee</div>
+					`;
+				}
 			}
 			
 			return {
