@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EXRP Hive Pricing Calculator</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; }
+        
+        .card {
+            width: 1123px;
+            height: 794px;
+            margin: 20px auto;
+            background: linear-gradient(to bottom right, #EFF6FF, #FFFFFF);
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            overflow: hidden;
+            padding: 24px;
+        }
+
+        .container {
+            display: grid;
+            grid-template-columns: 58% 42%;
+            gap: 24px;
+            height: 100%;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+
+        .title {
+            font-size: 1.25rem;
+            color: #1E40AF;
+            font-weight: bold;
+        }
+
+        .badge {
+            padding: 4px 8px;
+            border: 1px solid #2563EB;
+            border-radius: 4px;
+            color: #2563EB;
+            font-size: 0.875rem;
+        }
+
+        .modules-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            height: 600px;
+            overflow-y: auto;
+        }
+
+        .module-card {
+            padding: 12px;
+            border: 2px solid #E5E7EB;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .module-card:hover {
+            border-color: #93C5FD;
+        }
+
+        .module-card.selected {
+            border-color: #3B82F6;
+            background-color: #EFF6FF;
+        }
+
+        .module-header {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .module-title {
+            font-weight: 500;
+            font-size: 0.875rem;
+        }
+
+        .module-description {
+            font-size: 0.75rem;
+            color: #4B5563;
+            margin-top: 4px;
+        }
+
+        .module-price {
+            font-size: 0.75rem;
+            font-weight: 500;
+            margin-top: 4px;
+        }
+
+        .config-section {
+            border-left: 1px solid #E5E7EB;
+            padding-left: 16px;
+        }
+
+        .slider-container {
+            margin-bottom: 24px;
+        }
+
+        .slider-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+        }
+
+        input[type="range"] {
+            width: 100%;
+        }
+
+        .e-invoice-toggle {
+            background-color: #EFF6FF;
+            padding: 12px;
+            border-radius: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+        }
+
+        .pricing-summary {
+            background-color: #1E40AF;
+            color: white;
+            padding: 16px;
+            border-radius: 8px;
+            margin-bottom: 24px;
+        }
+
+        .price-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+            margin-bottom: 16px;
+            text-align: center;
+        }
+
+        .price-item {
+            padding: 8px;
+        }
+
+        .price-label {
+            font-size: 0.75rem;
+            color: #BFDBFE;
+        }
+
+        .price-value {
+            font-size: 1.125rem;
+            font-weight: bold;
+            margin: 4px 0;
+        }
+
+        .demo-button {
+            width: 100%;
+            background-color: white;
+            color: #1E40AF;
+            padding: 8px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 500;
+            cursor: pointer;
+            margin-bottom: 8px;
+        }
+
+        .selected-modules {
+            background-color: #F9FAFB;
+            padding: 12px;
+            border-radius: 8px;
+            height: 180px;
+            overflow-y: auto;
+        }
+
+        .module-list {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 8px;
+            margin-top: 8px;
+        }
+
+        .module-item {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.875rem;
+            align-items: center;
+        }
+
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 44px;
+            height: 24px;
+        }
+
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+            border-radius: 24px;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 16px;
+            width: 16px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+
+        input:checked + .slider {
+            background-color: #3B82F6;
+        }
+
+        input:checked + .slider:before {
+            transform: translateX(20px);
+        }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <div class="container">
+            <div class="modules-section">
+                <div class="header">
+                    <h2 class="title">Build Your EXRP Hive</h2>
+                    <span class="badge">Tailored for Mauritian businesses</span>
+                </div>
+                <div class="modules-grid" id="modulesGrid"></div>
+            </div>
+            
+            <div class="config-section">
+                <div class="slider-container">
+                    <div class="slider-header">
+                        <h3>Number of Users</h3>
+                        <span class="badge" id="userCount">5 Users</span>
+                    </div>
+                    <input type="range" min="1" max="15" value="5" id="userSlider">
+                </div>
+
+                <div class="e-invoice-toggle">
+                    <div>
+                        <h3>E-Invoicing</h3>
+                        <p class="module-description">MRA-compliant e-invoicing</p>
+                    </div>
+                    <label class="switch">
+                        <input type="checkbox" id="eInvoiceToggle">
+                        <span class="slider"></span>
+                    </label>
+                </div>
+
+                <div class="pricing-summary">
+                    <div class="price-grid">
+                        <div class="price-item">
+                            <div class="price-label">Monthly</div>
+                            <div class="price-value" id="monthlyPrice">Rs 0</div>
+                        </div>
+                        <div class="price-item" style="border-left: 1px solid #2563EB; border-right: 1px solid #2563EB;">
+                            <div class="price-label">Annual</div>
+                            <div class="price-value" id="annualPrice">Rs 0</div>
+                            <div style="font-size: 0.75rem; color: #93C5FD;">Save 5%</div>
+                        </div>
+                        <div class="price-item">
+                            <div class="price-label">Setup Fee</div>
+                            <div class="price-value" id="setupPrice">Rs 0</div>
+                        </div>
+                    </div>
+                    <button class="demo-button">Get Your Free Demo Today</button>
+                    <p style="text-align: center; font-size: 0.75rem; color: #BFDBFE;">
+                        Minimum term: 3 years for all Plans
+                    </p>
+                </div>
+
+                <div class="selected-modules">
+                    <h3>Selected Modules (<span id="moduleCount">0</span>)</h3>
+                    <div class="module-list" id="selectedModulesList"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const modules = [
+            { id: 'hivekeeper', name: 'Hive Keeper', price: 7500, popular: true, description: 'Inventory Management' },
+            { id: 'workerbee', name: 'Worker Bee', price: 5000, description: 'Customer Management' },
+            { id: 'honeymaker', name: 'Honey Maker', price: 7500, description: 'Basic Invoicing' },
+            { id: 'honeymaker2', name: 'Honey Maker Pro', price: 15000, popular: true, description: 'E-Invoicing Ready' },
+            { id: 'scoutbee', name: 'Scout Bee', price: 6250, description: 'Campaigns' },
+            { id: 'queenbee', name: 'Queen Bee', price: 8750, popular: true, description: 'Order Management' },
+            { id: 'consultbee', name: 'Consult Bee', price: 19600, description: 'Doctor/Optometrist' },
+            { id: 'busybee', name: 'Busy Bee', price: 5000, description: 'Appointments' },
+            { id: 'wisebee', name: 'Wise Bee', price: 7500, description: 'Analytics' }
+        ];
+
+        let selectedModules = [];
+        let users = 5;
+        let eInvoicing = false;
+
+        function renderModules() {
+            const grid = document.getElementById('modulesGrid');
+            grid.innerHTML = modules.map(module => `
+                <div class="module-card ${selectedModules.includes(module.id) ? 'selected' : ''}" 
+                     data-id="${module.id}" onclick="toggleModule('${module.id}')">
+                    <div class="module-header">
+                        <div>
+                            <span class="module-title">${module.name}</span>
+                            ${module.popular ? '⭐' : ''}
+                            <p class="module-description">${module.description}</p>
+                            <p class="module-price">Rs ${module.price.toLocaleString()}</p>
+                        </div>
+                        ${selectedModules.includes(module.id) ? '✓' : ''}
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function toggleModule(id) {
+            if (selectedModules.includes(id)) {
+                selectedModules = selectedModules.filter(m => m !== id);
+            } else {
+                selectedModules.push(id);
+            }
+            updateUI();
+        }
+
+        function calculatePrice() {
+            const basePrice = 2500 * users;
+            const modulePrice = selectedModules.reduce((sum, moduleId) => {
+                const module = modules.find(m => m.id === moduleId);
+                return sum + (module ? module.price : 0);
+            }, 0);
+            const eInvoicingPrice = eInvoicing ? (1800 * users) : 0;
+            const totalMonthly = (basePrice + modulePrice + eInvoicingPrice) / 12;
+            
+            return {
+                monthly: Math.round(totalMonthly),
+                annual: Math.round(totalMonthly * 12 * 0.95),
+                setup: Math.round(modulePrice * 0.5)
+            };
+        }
+
+        function updateUI() {
+            renderModules();
+            document.getElementById('userCount').textContent = `${users} Users`;
+            document.getElementById('moduleCount').textContent = selectedModules.length;
+            
+            const selectedList = document.getElementById('selectedModulesList');
+            selectedList.innerHTML = selectedModules.map(moduleId => {
+                const module = modules.find(m => m.id === moduleId);
+                return `
+                    <div class="module-item">
+                        <span>→ ${module.name}</span>
+                        <span style="color: #4B5563; font-size: 0.75rem;">
+                            Rs ${module.price.toLocaleString()}
+                        </span>
+                    </div>
+                `;
+            }).join('');
+            
+            const price = calculatePrice();
+            document.getElementById('monthlyPrice').textContent = `Rs ${price.monthly.toLocaleString()}`;
+            document.getElementById('annualPrice').textContent = `Rs ${price.annual.toLocaleString()}`;
+            document.getElementById('setupPrice').textContent = `Rs ${price.setup.toLocaleString()}`;
+        }
+
+        // Event Listeners
+        document.getElementById('userSlider').addEventListener('input', (e) => {
+            users = parseInt(e.target.value);
+            updateUI();
+        });
+
+        document.getElementById('eInvoiceToggle').addEventListener('change', (e) => {
+            eInvoicing = e.target.checked;
+            updateUI();
+        });
+
+        // Initial render
+        renderModules();
+        updateUI();
+    </script>
+</body>
+</html>
