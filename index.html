@@ -478,7 +478,7 @@
 			const eInvoicingPrice = eInvoicing ? (1800 * users) : 0;
 			const totalMonthly = (basePrice + modulePrice + eInvoicingPrice) / 12;
 			const annual = Math.round(totalMonthly * 12 * 0.95);
-			const setup = Math.round(modulePrice * 0.5);
+			const setup = Math.round(modulePrice);
 			
 			// Update setup fee section content
 			const setupSection = document.getElementById('setupFeeSection');
